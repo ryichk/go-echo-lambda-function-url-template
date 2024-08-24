@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for Go's Echo Web application.
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+
+Resources:
+  GoEchoAppFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: app/
+      PackageType: Image
+      Architectures:
+      - x86_64
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          AWS_LWA_ASYNC_INIT: true
+          AWS_LWA_PASS_THROUGH_PATH: '/'
+      FunctionUrlConfig:
+        AuthType: NONE
+    Metadata:
+      DockerTag: provided.al2023-v1
+      DockerContext: .
+      Dockerfile: Dockerfile
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  GoEchoAppFunctionOutput:
+    Description: "Go's Echo App Function ARN"
+    Value: !GetAtt GoEchoAppFunction.Arn
+  GoEchoAppFunctionUrlOutput:
+    Description: "Go's Echo App Function URL"
+    Value: !GetAtt GoEchoAppFunctionUrl.FunctionUrl

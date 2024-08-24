@@ -1,0 +1,5 @@
+bootstrap
+
+.env
+.aws-sam/
+.DS_Store
